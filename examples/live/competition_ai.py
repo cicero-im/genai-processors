@@ -35,28 +35,31 @@ API_KEY = _get_api_key()
 async def run_competition(video_mode: str) -> None:
     """Runs the AI competition participant."""
     pya = pyaudio.PyAudio()
-    video_mode_enum = video.VideoMode(video_mode)
-    input_processor = video.VideoIn(video_mode=video_mode_enum) + audio_io.PyAudioIn(pya)
+    try:
+        video_mode_enum = video.VideoMode(video_mode)
+        input_processor = video.VideoIn(video_mode=video_mode_enum) + audio_io.PyAudioIn(pya)
 
-    async def input_stream():
-        try:
-            while True:
-                await asyncio.sleep(1)
-        finally:
-            yield content_api.ProcessorPart("Ending the stream")
+        async def input_stream():
+            try:
+                while True:
+                    await asyncio.sleep(1)
+            finally:
+                yield content_api.ProcessorPart("Ending the stream")
 
-    competitor_processor = commentator.create_live_commentator(
-        API_KEY,
-        chattiness=0.0,
-        prompt_parts=QUIZ_PROMPT_PARTS,
-    )
+        competitor_processor = commentator.create_live_commentator(
+            API_KEY,
+            chattiness=0.0,
+            prompt_parts=QUIZ_PROMPT_PARTS,
+        )
 
-    consume_output = audio_io.PyAudioOut(pya)
+        consume_output = audio_io.PyAudioOut(pya)
 
-    agent = input_processor + competitor_processor + consume_output
+        agent = input_processor + competitor_processor + consume_output
 
-    async for _ in agent(input_stream()):
-        pass
+        async for _ in agent(input_stream()):
+            pass
+    finally:
+        pya.terminate()
 
 
 if __name__ == "__main__":

@@ -139,7 +139,7 @@ export class LiveCommentator extends LitElement {
     this.videoSources = videoSources;
   }
 
-  private send(data: Object) {
+  private send(data: object) {
     // Tries to send data to WebSocket, but ignores errors:
     // If the connection breaks we will be trying to reestablish it and resume
     // streaming the currently selected sources.
@@ -185,7 +185,7 @@ export class LiveCommentator extends LitElement {
     });
   }
 
-  private async videoOn(sourceId: String) {
+  private async videoOn(sourceId: string) {
     this.screenOff();
     if (this.video != sourceId) {
       this.videoOff();

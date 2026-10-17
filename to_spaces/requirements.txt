@@ -1,3 +1,6 @@
-gradio
+gradio>=5.0.0
 numpy
 google-genai
+gradio-webrtc
+opencv-python
+Pillow

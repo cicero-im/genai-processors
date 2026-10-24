@@ -34,7 +34,10 @@ async def _generate_async(prompt: str, model: str, api_key: str) -> Tuple[int, n
             if msg.server_content and msg.server_content.audio_chunks:
                 for chunk in msg.server_content.audio_chunks:
                     audio.extend(chunk.data)
-    audio_np = np.frombuffer(bytes(audio), dtype=np.int16).astype(np.float32) / 32768.0
+    if len(audio) > 0:
+        audio_np = np.frombuffer(bytes(audio), dtype=np.int16).astype(np.float32) / 32768.0
+    else:
+        audio_np = np.array([], dtype=np.float32)
     return DEFAULT_RATE, audio_np
 
 
